@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Dawnora Kyabirwa</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .donate-slider {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+            margin: 0;
+        }
+        .donate-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .donate-slide.active { opacity: 1; }
+        .donate-slide-1 { background-image: url('images/1.jpg'); }
+        .donate-slide-2 { background-image: url('images/orphans.jpg'); }
+        .donate-slide-3 { background-image: url('images/medical.jpg'); }
+        .donate-slide-4 { background-image: url('images/community.jpg'); }
+
+        .donate-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            z-index: 2;
+        }
+        .donate-overlay h3 { font-size: 22px; margin-bottom: 18px; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+        .donate-numbers {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .donate-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+        .donate-card span { display: block; font-size: 11px; opacity: 0.8; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; }
+        .donate-card strong { font-size: 18px; }
+        .donate-card p { font-size: 11px; margin-top: 4px; opacity: 0.75; }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 7px;
+            z-index: 3;
+        }
+        .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .dot.active { background: #27ae60; }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .donate-numbers { gap: 10px; }
+            .donate-card { min-width: 120px; padding: 10px 15px; }
+            .donate-slider { height: 240px; }
+        }
+        .contact-info p { margin: 10px 0; font-size: 16px; }
+        .contact-info a { color: #27ae60; text-decoration: none; }
+        .contact-info a:hover { text-decoration: underline; }
+        form input, form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: "Segoe UI", sans-serif;
+            box-sizing: border-box;
+            background: #f9f9f9;
+            transition: border 0.3s;
+        }
+        form input:focus, form textarea:focus {
+            border-color: #27ae60;
+            outline: none;
+            background: white;
+        }
+        form textarea { height: 140px; resize: vertical; }
+        form button { width: 100%; padding: 14px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div id="loader">
+    <div class="spinner"></div>
+    <h3>Dawnora Kyabirwa</h3>
+</div>
+
+<header>
+    <h1>Contact Us</h1>
+    <p>We would love to hear from you</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="programs.html">Programs</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact Us</a>
+    <a href="support.html">Support Us</a>
+</nav>
+
+<!-- Donation banner with sliding images behind it -->
+<div class="donate-slider" id="donateSlider">
+    <div class="donate-slide donate-slide-1 active"></div>
+    <div class="donate-slide donate-slide-2"></div>
+    <div class="donate-slide donate-slide-3"></div>
+    <div class="donate-slide donate-slide-4"></div>
+
+    <div class="donate-overlay">
+        <h3>Support Us via Mobile Money</h3>
+        <div class="donate-numbers">
+            <div class="donate-card">
+                <span>MTN Uganda</span>
+                <strong>0782168324</strong>
+                <p>Dawnora Kyabirwa</p>
+            </div>
+            <div class="donate-card">
+                <span>Airtel Uganda</span>
+                <strong>0757321801</strong>
+                <p>Dawnora Kyabirwa</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slider-dots">
+        <div class="dot active" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="contact-grid">
+
+        <div class="card fade-in">
+            <h2>Get in Touch</h2>
+            <div class="contact-info">
+                <p><strong>Email:</strong><br>
+                    <a href="mailto:elviskisige96@gmail.com">elviskisige96@gmail.com</a></p>
+                <p><strong>Phone:</strong><br>
+                    <a href="tel:+256757321801">+256 757-321-801</a></p>
+                <p><strong>Location:</strong><br>
+                    Kyabirwa Village, Jinja, Uganda</p>
+                <p><strong>WhatsApp:</strong><br>
+                    <a href="https://wa.me/256757321801" target="_blank">Chat with us on WhatsApp</a></p>
+            </div>
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+            <h3>Office Hours</h3>
+            <p>Monday - Friday: 8:00 AM - 5:00 PM</p>
+            <p>Saturday: 9:00 AM - 1:00 PM</p>
+            <p>Sunday: Closed</p>
+        </div>
+
+        <div class="card fade-in">
+            <h2>Send a Message</h2>
+            <form action="https://formsubmit.co/elviskisige96@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="thanks.html">
+                <input type="text" name="name" placeholder="Your Full Name" required>
+                <input type="email" name="email" placeholder="Your Email Address" required>
+                <input type="text" name="phone" placeholder="Your Phone Number (optional)">
+                <textarea name="message" placeholder="Write your message here..." required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 Dawnora Kyabirwa</p>
+</footer>
+
+<a href="https://wa.me/256757321801" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
+    <img src="images/whatsap.png">
+</a>
+
+<div class="chat-icon" onclick="toggleChat()">
+    &#128172;
+    <span class="notif">1</span>
+</div>
+
+<div class="chat-box" id="chatBox">
+    <div class="chat-header">
+        Dawnora Support
+        <span onclick="toggleChat()" style="cursor:pointer;">&times;</span>
+    </div>
+    <div class="chat-body" id="chatBody">
+        <p class="bot">Hello! Welcome to Dawnora Kyabirwa.</p>
+        <p class="bot">How can we help you today?</p>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="userInput" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    let donateSlide = 0;
+    const slides = document.querySelectorAll('.donate-slide');
+    const dots = document.querySelectorAll('.dot');
+
+    function goToSlide(index) {
+        slides[donateSlide].classList.remove('active');
+        dots[donateSlide].classList.remove('active');
+        donateSlide = index;
+        slides[donateSlide].classList.add('active');
+        dots[donateSlide].classList.add('active');
+    }
+
+    setInterval(function() {
+        goToSlide((donateSlide + 1) % slides.length);
+    }, 3500);
+</script>
+
+</body>
+</html>
