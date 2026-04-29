@@ -2,955 +2,1316 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dawnora Kyabirwa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Dawnora Kyabirwa — Restoring Hope along the River Nile</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* (Same CSS as before, no changes needed except text content) */
-    :root {
-      --green-deep:   #064e3b;
-      --green-mid:    #065f46;
-      --green-bright: #10b981;
-      --green-light:  #d1fae5;
-      --gold:         #d97706;
-      --gold-light:   #fef3c7;
-      --cream:        #faf9f6;
-      --text-dark:    #1a1a1a;
-      --text-mid:     #374151;
-      --text-soft:    #6b7280;
-      --white:        #ffffff;
-      --radius:       12px;
-      --transition:   0.3s ease;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; font-size: 16px; }
-
     body {
+      background: #02141c;
+      color: #f0f0f0;
       font-family: 'Outfit', sans-serif;
-      background: var(--cream);
-      color: var(--text-dark);
       overflow-x: hidden;
     }
 
-    /* ── LOADER ── */
-    #loader {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--green-deep);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 1.25rem;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      display: block;
     }
-    #loader.hidden { opacity: 0; visibility: hidden; }
-    #loader h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.1rem, 3vw, 1.4rem);
-      color: var(--green-light);
-      font-weight: 400;
-      letter-spacing: 0.06em;
-    }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid rgba(255,255,255,0.15);
-      border-top-color: var(--green-bright);
-      border-radius: 50%;
-      animation: spin 0.85s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── NAV ── */
+    .ui-wrapper {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Moving pearl (light) follows scroll */
+    .moving-sun {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 55px;
+      height: 55px;
+      z-index: 30;
+      pointer-events: none;
+      filter: drop-shadow(0 0 12px rgba(80, 200, 255, 0.8));
+      transition: transform 0.02s linear;
+      will-change: transform;
+    }
+    @media (max-width: 768px) {
+      .moving-sun { width: 42px; height: 42px; bottom: 15px; left: 15px; }
+    }
+    .moving-sun svg {
+      width: 100%;
+      height: 100%;
+      animation: gentlePulse 2.4s infinite ease-in-out;
+      transform-origin: center;
+    }
+    @keyframes gentlePulse {
+      0% { transform: scale(0.92); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 18px #6dd5ff); }
+      100% { transform: scale(0.92); opacity: 0.7; }
+    }
+
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 clamp(1.25rem, 5vw, 3rem);
-      height: 64px;
-      background: rgba(6, 78, 59, 0.92);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+      background: rgba(2, 20, 28, 0.75);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      transition: background var(--transition);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(100, 210, 230, 0.3);
     }
-    .nav-brand {
+    .logo-text {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      font-weight: 600;
-      color: var(--white);
-      letter-spacing: 0.03em;
-      text-decoration: none;
-      white-space: nowrap;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff, #9be7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
-    .nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2rem); align-items: center; }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
     .nav-links a {
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 245, 0.85);
       text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 400;
-      letter-spacing: 0.03em;
-      transition: color var(--transition);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: 0.2s;
     }
-    .nav-links a:hover { color: var(--green-bright); }
-    .nav-links .nav-cta {
-      background: var(--green-bright);
-      color: var(--green-deep) !important;
-      padding: 8px 18px;
-      border-radius: 6px;
+    .nav-links a:hover { color: #7ae9ff; }
+    .nav-cta {
+      background: #3bc9db;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      color: #02141c !important;
       font-weight: 600;
-      transition: background var(--transition), transform var(--transition);
     }
-    .nav-links .nav-cta:hover { background: #34d399; transform: translateY(-1px); }
-
-    /* Hamburger */
-    .hamburger {
-      display: none; flex-direction: column; gap: 5px;
-      cursor: pointer; background: none; border: none; padding: 4px;
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: #7ae9ff;
+      cursor: pointer;
     }
-    .hamburger span {
-      display: block; width: 24px; height: 2px;
-      background: white; border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s;
+    @media (max-width: 780px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      nav { padding: 0.7rem 1.2rem; }
     }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    .mobile-menu {
-      display: none; flex-direction: column; gap: 0;
-      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
-      background: rgba(6, 78, 59, 0.97);
-      backdrop-filter: blur(12px);
-      padding: 0.75rem 0 1.25rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+    .mobile-nav {
+      position: fixed;
+      top: 68px;
+      right: -100%;
+      width: 70%;
+      max-width: 260px;
+      background: rgba(2, 30, 40, 0.96);
+      backdrop-filter: blur(16px);
+      border-radius: 1rem 0 0 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: 0.3s;
+      z-index: 25;
     }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a {
-      color: rgba(255,255,255,0.85);
+    .mobile-nav.open { right: 0; }
+    .mobile-nav a {
+      color: #f5f5f5;
       text-decoration: none;
       font-size: 1rem;
-      padding: 12px clamp(1.25rem, 5vw, 3rem);
-      transition: background var(--transition);
-    }
-    .mobile-menu a:hover { background: rgba(255,255,255,0.06); color: var(--green-bright); }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
+      padding: 0.4rem 0;
     }
 
-    /* ── HERO ── */
-    .hero {
-      position: relative;
-      height: 100svh;
-      min-height: 500px;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid rgba(100, 210, 230, 0.2);
+      background: rgba(2, 25, 34, 0.5);
+      backdrop-filter: blur(4px);
     }
-    .hero video {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-    .hero-overlay {
-      position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(
-        to bottom,
-        rgba(6,78,59,0.55) 0%,
-        rgba(6,78,59,0.40) 50%,
-        rgba(6,78,59,0.75) 100%
-      );
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background: transparent;
     }
     .hero-content {
-      position: relative; z-index: 2;
-      text-align: center;
-      padding: clamp(1rem, 5vw, 2rem);
-      max-width: min(720px, 94vw);
-      animation: fadeUp 1.1s ease both;
-      animation-delay: 0.3s;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
+      max-width: 700px;
+      background: rgba(0, 20, 30, 0.55);
+      backdrop-filter: blur(12px);
+      padding: 2.2rem;
+      border-radius: 2rem;
+      border: 1px solid rgba(80, 200, 255, 0.4);
     }
     .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      color: #7ae9ff;
+      border: 1px solid rgba(80,200,255,0.5);
       display: inline-block;
-      font-size: clamp(0.65rem, 1.8vw, 0.78rem);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--green-bright);
-      border: 1px solid rgba(16,185,129,0.4);
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 1.25rem;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      margin-bottom: 1rem;
     }
     .hero-content h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 7vw, 4.5rem);
-      font-weight: 500;
-      color: var(--white);
-      line-height: 1.1;
+      font-size: 3.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff, #a0f0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
       margin-bottom: 1rem;
     }
     .hero-content p {
-      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-      color: rgba(255,255,255,0.82);
-      margin-bottom: 2rem;
-      font-weight: 300;
-      line-height: 1.7;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(255,255,250,0.9);
+      margin-bottom: 1.8rem;
     }
-    .hero-btns {
-      display: flex; gap: 12px;
-      justify-content: center; flex-wrap: wrap;
+    /* Image Slideshow Styles */
+    .hero-slideshow {
+      margin-top: 2rem;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(80,200,255,0.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: #02141c;
+    }
+    .slide-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .slide-img.active {
+      opacity: 1;
+    }
+    @media (min-width: 768px) {
+      .slideshow-container { height: 280px; }
     }
     .btn {
-      display: inline-block; text-decoration: none;
-      padding: clamp(11px,2vw,14px) clamp(22px,4vw,32px);
-      border-radius: 8px;
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      display: inline-flex;
+      gap: 0.6rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      text-decoration: none;
       font-weight: 500;
-      cursor: pointer; border: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      transition: 0.2s;
     }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
-    .btn-solid { background: var(--green-bright); color: var(--green-deep); }
-    .btn-ghost { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.55); }
-    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
-    .hero-scroll {
-      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px;
-      color: rgba(255,255,255,0.5); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    .btn-primary {
+      background: #3bc9db;
+      color: #02141c;
     }
-    .scroll-line {
-      width: 1px; height: 36px; background: rgba(255,255,255,0.3);
-      animation: scrollBounce 1.8s ease-in-out infinite;
+    .btn-outline {
+      border: 1px solid #7ae9ff;
+      color: #7ae9ff;
     }
-    @keyframes scrollBounce {
-      0%,100% { transform: scaleY(1); opacity: 0.4; }
-      50%      { transform: scaleY(0.6); opacity: 1; }
-    }
-
-    /* ── SECTIONS SHARED ── */
-    section { padding: clamp(3rem,8vw,5.5rem) clamp(1.25rem,5vw,3rem); }
-    .container { max-width: 1040px; margin: 0 auto; width: 100%; }
     .section-eyebrow {
-      font-size: 0.72rem; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--green-bright);
-      margin-bottom: 0.6rem; font-weight: 500;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      color: #7ae9ff;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
     }
     .section-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
-      font-weight: 500; line-height: 1.15;
-      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #e3faff;
+      margin-bottom: 0.8rem;
     }
-    .divider-bar {
-      width: 48px; height: 3px;
-      background: var(--green-bright);
-      border-radius: 2px; margin-bottom: 1.5rem;
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: #3bc9db;
+      margin: 1rem 0 2rem;
     }
-    .section-lead {
-      font-size: clamp(0.95rem, 2vw, 1.05rem);
-      color: var(--text-mid); line-height: 1.8;
-      max-width: 640px;
-    }
-
-    /* ── ABOUT / MV CARDS ── */
-    .about-section { background: var(--white); }
-    .mv-grid {
+    .grid-2 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-      gap: 16px; margin-top: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
     }
-    .mv-card {
-      border: 1px solid #e5e7eb;
-      border-radius: var(--radius);
-      padding: clamp(1.25rem, 3vw, 1.75rem);
-      background: var(--cream);
-      transition: box-shadow var(--transition), transform var(--transition);
-    }
-    .mv-card:hover { box-shadow: 0 8px 28px rgba(6,78,59,0.10); transform: translateY(-3px); }
-    .mv-icon {
-      width: 44px; height: 44px;
-      background: var(--green-light);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; margin-bottom: 1rem;
-    }
-    .mv-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--green-deep); }
-    .mv-card p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.75; }
-
-    /* ── VALUES ── */
-    .values-section { background: var(--green-deep); }
-    .values-section .section-title { color: var(--white); }
-    .values-section .section-eyebrow { color: var(--green-bright); }
-    .values-section .divider-bar { background: var(--gold); }
-    .values-section .section-lead { color: rgba(255,255,255,0.7); }
-    .values-grid {
+    .grid-3 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%,180px), 1fr));
-      gap: 14px; margin-top: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2rem;
     }
-    .value-card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius);
-      padding: clamp(1.1rem, 2.5vw, 1.5rem);
-      text-align: center;
-      transition: background var(--transition), transform var(--transition);
+    .program-card {
+      background: rgba(15, 55, 65, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(80, 200, 255, 0.3);
+      transition: 0.25s;
     }
-    .value-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-3px); }
-    .value-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
-    .value-card h4 { font-size: 0.95rem; font-weight: 600; color: var(--green-bright); margin-bottom: 0.4rem; }
-    .value-card p { font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.65; }
-
-    /* ── STORY (Founder) ── */
-    .story-section { background: var(--cream); }
-    .story-layout {
-      display: grid;
-      grid-template-columns: 1fr minmax(min(100%,420px),520px);
-      gap: clamp(2rem,5vw,4rem);
-      align-items: start;
-      margin-top: 2.5rem;
+    .program-card:hover {
+      border-color: #7ae9ff;
+      transform: translateY(-5px);
     }
-    @media (max-width: 800px) {
-      .story-layout { grid-template-columns: 1fr; }
+    .program-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
     }
-    .story-text p {
-      font-size: clamp(0.92rem, 2vw, 1rem);
-      color: var(--text-mid); line-height: 1.9;
-      margin-bottom: 1.1rem;
+    .program-card-body {
+      padding: 1.2rem;
     }
-    .story-text p strong { color: var(--green-deep); font-weight: 600; }
-    .story-text p:last-child { margin-bottom: 0; }
-    .story-pull {
-      background: var(--green-deep);
-      border-radius: 16px;
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      color: white;
+    .program-card-body i {
+      font-size: 1.6rem;
+      color: #7ae9ff;
+    }
+    .speech-card {
+      background: rgba(15, 55, 65, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 1.8rem;
+      border: 1px solid rgba(80, 200, 255, 0.3);
+    }
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #7ae9ff;
+    }
+    .speech-bubble {
+      background: rgba(0, 30, 40, 0.8);
+      border-radius: 24px;
+      padding: 1.2rem;
+      border-left: 4px solid #7ae9ff;
+      font-style: italic;
       position: relative;
     }
-    .story-pull::before {
-      content: '\201C';
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 6rem; line-height: 0.5;
-      color: var(--green-bright); opacity: 0.5;
-      position: absolute; top: 1.5rem; left: 1.5rem;
-      pointer-events: none;
+    .speech-bubble::before {
+      content: "“";
+      font-size: 3rem;
+      color: #7ae9ff;
+      opacity: 0.5;
+      position: absolute;
+      top: -10px;
+      left: 12px;
     }
-    .story-pull blockquote {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.15rem, 3vw, 1.5rem);
-      font-style: italic;
-      line-height: 1.65;
-      color: white;
-      padding-top: 2.5rem;
-      margin-bottom: 1.5rem;
+    .value-card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      padding: 1.2rem;
+      text-align: center;
     }
-    .story-attribution { display: flex; align-items: center; gap: 12px; }
-    .story-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: var(--green-bright);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600; font-size: 0.9rem; color: var(--green-deep);
-      flex-shrink: 0;
+    .hier-tree {
+      background: rgba(0,20,28,0.6);
+      border-radius: 28px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
     }
-    .story-attribution-text { font-size: 0.8rem; }
-    .story-attribution-name { color: var(--green-bright); font-weight: 500; margin-bottom: 2px; }
-    .story-attribution-role { color: rgba(255,255,255,0.5); }
-
-    /* Co-founder section */
-    .cofounder-section {
-      background: var(--white);
+    .hier-tier {
+      margin-bottom: 1rem;
     }
-
-    /* ── HIERARCHY ── */
-    .hierarchy-section { background: var(--white); }
-    .hier-tree { margin-top: 2.5rem; }
-    .hier-tier { margin-bottom: 0; }
     .hier-tier-label {
-      font-size: 0.68rem; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--text-soft);
-      margin-bottom: 8px;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #7ae9ff;
+      margin-bottom: 0.5rem;
     }
-    .hier-nodes { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hier-nodes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
     .hier-node {
-      padding: 10px 18px; border-radius: 8px;
-      font-size: 0.85rem; font-weight: 500;
-      border: 1px solid transparent;
+      background: rgba(30,80,100,0.6);
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
     }
-    .hn-founder { background: var(--green-light); color: var(--green-deep); border-color: #6ee7b7; }
-    .hn-board   { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
-    .hn-ops     { background: var(--gold-light); color: #92400e; border-color: #fcd34d; }
-    .hn-field   { background: #f3f4f6; color: var(--text-mid); border-color: #d1d5db; }
-    .hier-connector { width: 2px; height: 20px; background: #d1d5db; margin-left: 24px; margin-top: 4px; margin-bottom: 4px; }
-
-    /* ── IMPACT ── */
-    .impact-section { background: var(--cream); }
-    .impact-grid {
+    .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
-      gap: 14px; margin-top: 2.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2rem;
     }
-    .impact-card {
-      background: var(--white);
-      border: 1px solid #e5e7eb;
-      border-radius: var(--radius);
-      padding: clamp(1.1rem,3vw,1.5rem);
+    .gallery-item {
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(80, 200, 255, 0.3);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+      margin: 2rem 0;
+    }
+    .stat {
+      background: rgba(0,0,0,0.4);
+      padding: 1rem;
+      border-radius: 18px;
       text-align: center;
-      transition: transform var(--transition), box-shadow var(--transition);
+      flex: 1;
     }
-    .impact-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(6,78,59,0.1); }
-    .impact-num {
+    .stat-number {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #7ae9ff;
+    }
+    
+    /* ========== FIVE WAYS TO GIVE BACK ========== */
+    .ways-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 2rem;
+    }
+    .way-card {
+      background: rgba(15, 55, 65, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 1.8rem;
+      border: 1px solid rgba(80, 200, 255, 0.3);
+      transition: 0.25s;
+    }
+    .way-card:hover {
+      border-color: #7ae9ff;
+      transform: translateY(-5px);
+    }
+    .way-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 1rem;
+    }
+    .way-icon.gold { background: rgba(201,162,39,0.2); color: #f0b27a; }
+    .way-icon.teal { background: rgba(43,122,120,0.2); color: #7ae9ff; }
+    .way-icon.green { background: rgba(39,174,96,0.2); color: #7ae9ff; }
+    .way-icon.red { background: rgba(229,62,62,0.2); color: #ff8a7a; }
+    .way-icon.purple { background: rgba(124,58,237,0.2); color: #c79eff; }
+    .step-badge {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: #7ae9ff;
+      margin-bottom: 0.5rem;
+    }
+    .way-card h3 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 5vw, 2.8rem);
-      font-weight: 600; color: var(--green-deep); line-height: 1;
-      margin-bottom: 8px;
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
     }
-    .impact-label { font-size: 0.8rem; color: var(--text-soft); line-height: 1.5; }
-
-    /* ── CTA BANNER ── */
-    .cta-section {
-      background: linear-gradient(135deg, var(--green-deep) 0%, #065f46 60%, #047857 100%);
+    .way-card p {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #ddd;
+      margin-bottom: 1rem;
+    }
+    .momo-row {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0,20,28,0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 14px;
+      margin-bottom: 0.5rem;
+    }
+    .momo-label {
+      font-weight: 500;
+      color: #7ae9ff;
+    }
+    .momo-number {
+      font-weight: 600;
+    }
+    .momo-name {
+      background: rgba(0,0,0,0.4);
+      padding: 0.5rem;
+      border-radius: 12px;
+      margin: 0.5rem 0;
       text-align: center;
-      padding: clamp(3rem,8vw,5rem) clamp(1.25rem,5vw,3rem);
     }
-    .cta-section .section-eyebrow { color: var(--green-bright); }
-    .cta-section h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      font-weight: 500; color: var(--white);
-      margin-bottom: 1rem; line-height: 1.2;
+    .momo-note {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      font-style: italic;
     }
-    .cta-section p {
-      color: rgba(255,255,255,0.72);
-      font-size: clamp(0.9rem, 2vw, 1.05rem);
-      margin-bottom: 2rem; max-width: 520px;
-      margin-left: auto; margin-right: auto;
+    .unavailable-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(229,62,62,0.15);
+      border: 1px solid rgba(229,62,62,0.4);
+      border-radius: 40px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.75rem;
+    }
+    .inkind-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .inkind-list li {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .inkind-list li::before {
+      content: "•";
+      color: #7ae9ff;
+    }
+    
+    /* ========== CONTACT SECTION (two‑column grid) ========== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    .contact-card {
+      background: rgba(15, 55, 65, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 2rem;
+      border: 1px solid rgba(80,200,255,0.3);
+    }
+    .contact-info p {
+      margin: 1rem 0;
+      line-height: 1.6;
+    }
+    .contact-info a {
+      color: #7ae9ff;
+      text-decoration: none;
+    }
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(80,200,255,0.4);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.4);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+    form input:focus, form textarea:focus {
+      outline: none;
+      border-color: #7ae9ff;
+      background: rgba(0,0,0,0.6);
+    }
+    form button {
+      background: #3bc9db;
+      color: #02141c;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    form button:hover {
+      background: #7ae9ff;
+      transform: translateY(-2px);
+    }
+    hr {
+      margin: 1rem 0;
+      border-top: 1px solid rgba(100,210,230,0.3);
     }
 
-    /* ── FOOTER ── */
-    footer {
-      background: #051f14;
-      padding: clamp(1.5rem,4vw,2.5rem) clamp(1.25rem,5vw,3rem);
-      text-align: center;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
     }
-    .footer-brand {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem; font-weight: 500;
-      color: var(--green-light); margin-bottom: 0.5rem;
-    }
-    footer p { font-size: 0.8rem; color: rgba(255,255,255,0.35); line-height: 1.6; }
-    .footer-links { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
-    .footer-links a { font-size: 0.8rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color var(--transition); }
-    .footer-links a:hover { color: var(--green-bright); }
-
-    /* ── WHATSAPP FLOAT ── */
     .whatsapp-float {
-      position: fixed; bottom: 90px; right: 20px; z-index: 200;
-      width: 52px; height: 52px; border-radius: 50%;
-      background: #25d366;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 16px rgba(37,211,102,0.4);
-      transition: transform var(--transition), box-shadow var(--transition);
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #25D366;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      text-decoration: none;
+      z-index: 30;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
     }
-    .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(37,211,102,0.5); }
-    .whatsapp-float img { width: 30px; height: 30px; object-fit: contain; }
-
-    /* ── CHAT ── */
     .chat-icon {
-      position: fixed; bottom: 20px; right: 20px; z-index: 200;
-      width: 52px; height: 52px; border-radius: 50%;
-      background: var(--green-deep);
-      border: 2px solid var(--green-bright);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(6,78,59,0.35);
-      transition: transform var(--transition);
+      position: fixed;
+      bottom: 25px;
+      left: 25px;
+      background: #0e5c4a;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 30;
+      border: 2px solid #7ae9ff;
+      background: rgba(14, 92, 74, 0.85);
+      backdrop-filter: blur(4px);
     }
-    .chat-icon:hover { transform: scale(1.1); }
     .notif {
-      position: absolute; top: -4px; right: -4px;
-      background: #ef4444; color: white;
-      width: 18px; height: 18px; border-radius: 50%;
-      font-size: 0.65rem; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ef4444;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .chat-box {
-      display: none; flex-direction: column;
-      position: fixed; bottom: 82px; right: 16px; z-index: 201;
-      width: min(330px, calc(100vw - 32px));
-      background: var(--white);
-      border-radius: 16px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-      overflow: hidden;
+      position: fixed;
+      bottom: 85px;
+      left: 25px;
+      width: 300px;
+      background: #fff;
+      border-radius: 18px;
+      display: none;
+      flex-direction: column;
+      z-index: 31;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     }
-    .chat-box.open { display: flex; animation: popIn 0.25s ease; }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.9) translateY(10px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
+    .chat-box.open { display: flex; }
     .chat-header {
-      background: var(--green-deep);
-      color: white; padding: 14px 16px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.9rem; font-weight: 500;
+      background: #0e5c4a;
+      padding: 12px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 18px 18px 0 0;
     }
     .chat-body {
-      flex: 1; padding: 14px; max-height: 260px; overflow-y: auto;
-      display: flex; flex-direction: column; gap: 8px;
-      font-size: 0.85rem;
+      padding: 12px;
+      height: 200px;
+      overflow-y: auto;
+      background: #fefefe;
+      color: #111;
     }
-    .chat-body .bot {
-      background: var(--green-light); color: var(--green-deep);
-      padding: 8px 12px; border-radius: 0 10px 10px 10px;
-      max-width: 88%; line-height: 1.5;
+    .bot {
+      background: #eef2f5;
+      padding: 6px 10px;
+      border-radius: 12px;
+      margin-bottom: 6px;
+      width: fit-content;
     }
-    .chat-body .user-msg {
-      background: var(--green-deep); color: white;
-      padding: 8px 12px; border-radius: 10px 10px 0 10px;
-      max-width: 88%; align-self: flex-end; line-height: 1.5;
+    .user-msg {
+      background: #0e5c4a;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 12px;
+      margin-bottom: 6px;
+      text-align: right;
     }
-    .chat-body h6 { font-size: 0.75rem; color: var(--text-soft); font-weight: 400; }
-    .chat-footer { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid #f3f4f6; }
+    .chat-footer {
+      display: flex;
+      border-top: 1px solid #eee;
+    }
     .chat-footer input {
-      flex: 1; border: 1px solid #e5e7eb; border-radius: 8px;
-      padding: 8px 12px; font-family: 'Outfit', sans-serif;
-      font-size: 0.85rem; outline: none;
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 10px;
     }
-    .chat-footer input:focus { border-color: var(--green-bright); }
     .chat-footer button {
-      background: var(--green-deep); color: white;
-      border: none; border-radius: 8px;
-      padding: 8px 14px; font-size: 0.82rem;
-      font-family: 'Outfit', sans-serif; cursor: pointer;
-      transition: background var(--transition);
+      background: #0e5c4a;
+      color: white;
+      border: none;
+      padding: 0 14px;
+      cursor: pointer;
     }
-    .chat-footer button:hover { background: var(--green-mid); }
-
-    /* ── FADE-IN ON SCROLL ── */
     .reveal {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      opacity: 0;
+      transform: translateY(25px);
+      transition: 0.7s;
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
+    footer {
+      background: #01161f;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #8ad2e0;
+    }
+    .footer-contact-details {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(100,210,230,0.3);
+    }
+    .footer-contact-details div {
+      text-align: left;
+      min-width: 180px;
+    }
+    .footer-contact-details strong {
+      color: #7ae9ff;
+    }
   </style>
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader">
-  <div class="spinner"></div>
-  <h3>Dawnora Kyabirwa</h3>
-</div>
+<canvas id="oceanCanvas"></canvas>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-brand" href="index.html">Dawnora Kyabirwa</a>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="programs.html">Programs</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="contact.html">Contact</a>
-    <a href="support.html" class="nav-cta">Support Us</a>
-  </div>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a>
-  <a href="programs.html">Programs</a>
-  <a href="gallery.html">Gallery</a>
-  <a href="contact.html">Contact</a>
-  <a href="support.html">Support Us</a>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-  <video autoplay muted loop playsinline>
-    <source src="images/Kid suffering.mp4" type="video/mp4">
-  </video>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-eyebrow">Nonprofit · Eastern Uganda · Kyabirwa Village. 2026</span>
-    <h1>Dawnora Kyabirwa</h1>
-    <p>Restoring Hope. Transforming Lives. Radiating a New Dawn.</p>
-    <div class="hero-btns">
-      <a href="support.html" class="btn btn-solid">Support Us</a>
-      <a href="programs.html" class="btn btn-ghost">Our Programs</a>
+<div class="ui-wrapper">
+  <nav>
+    <span class="logo-text">🌊 Dawnora Kyabirwa</span>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#mission">Mission</a>
+      <a href="#programs">Programs</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#support">Support</a>
+      <a href="#contact-section" class="nav-cta">Contact</a>
     </div>
+    <button class="mobile-menu-btn" id="mobileBtn"><i class="fas fa-bars"></i></button>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#">Home</a>
+    <a href="#mission">Mission</a>
+    <a href="#programs">Programs</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#support">Support</a>
+    <a href="#contact-section">Contact</a>
   </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</div>
 
-<!-- ABOUT -->
-<section class="about-section" id="about">
-  <div class="container">
-    <p class="section-eyebrow reveal">Who we are</p>
-    <h2 class="section-title reveal">About Dawnora Kyabirwa</h2>
-    <div class="divider-bar reveal"></div>
-    <p class="section-lead reveal">
-      Dawnora Kyabirwa (D.K) is a nonprofit organization founded in Uganda, dedicated to uplifting orphans, disabled individuals, and vulnerable communities through healthcare, education, and rehabilitation support.
-    </p>
-    <div class="mv-grid">
-      <div class="mv-card reveal">
-        <div class="mv-icon">👁️</div>
-        <h3>Our Vision</h3>
-        <p>A Uganda — and ultimately a world — where every vulnerable person has access to dignity, opportunity, and the light of a new dawn, regardless of their circumstances.</p>
-      </div>
-      <div class="mv-card reveal">
-        <div class="mv-icon">🎯</div>
-        <h3>Our Mission</h3>
-        <p>To restore hope and transform lives by providing medical support, education, and rehabilitation to orphans, disabled individuals, and underserved communities along the Nile and beyond.</p>
-      </div>
-      <div class="mv-card reveal">
-        <div class="mv-icon">📍</div>
-        <h3>Our Focus Area</h3>
-        <p>We primarily serve communities in Eastern Uganda, with a vision to expand our reach nationally and, one day, across Africa and the world.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VALUES -->
-<section class="values-section" id="values">
-  <div class="container">
-    <p class="section-eyebrow reveal">What drives us</p>
-    <h2 class="section-title reveal">Our Core Values</h2>
-    <div class="divider-bar reveal"></div>
-    <p class="section-lead reveal">These are the principles that guide every decision we make and every life we touch.</p>
-    <div class="values-grid">
-      <div class="value-card reveal">
-        <div class="value-icon">🌅</div>
-        <h4>New Dawn</h4>
-        <p>We believe every person deserves a fresh start and a radiant future.</p>
-      </div>
-      <div class="value-card reveal">
-        <div class="value-icon">🤝</div>
-        <h4>Dignity</h4>
-        <p>Every person we serve is treated with deep respect and worth, without exception.</p>
-      </div>
-      <div class="value-card reveal">
-        <div class="value-icon">💡</div>
-        <h4>Empowerment</h4>
-        <p>We build capacity so communities can sustain themselves long after we leave.</p>
-      </div>
-      <div class="value-card reveal">
-        <div class="value-icon">❤️</div>
-        <h4>Compassion</h4>
-        <p>We lead with empathy, especially toward children, the disabled, and the forgotten.</p>
-      </div>
-      <div class="value-card reveal">
-        <div class="value-icon">🔍</div>
-        <h4>Integrity</h4>
-        <p>We are transparent, accountable, and honest in everything we do and say.</p>
-      </div>
-      <div class="value-card reveal">
-        <div class="value-icon">🌍</div>
-        <h4>Community</h4>
-        <p>Change begins locally. We believe in working with — not just for — communities.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- STORY (Founder) -->
-<section class="story-section" id="story">
-  <div class="container">
-    <p class="section-eyebrow reveal">The story behind it all</p>
-    <h2 class="section-title reveal">Why We Started</h2>
-    <div class="divider-bar reveal"></div>
-    <div class="story-layout">
-      <div class="story-text reveal">
-        <p>
-          I grew up in a deep village along the <strong>River Nile</strong>. If you know that part of Uganda, you already know the weight that comes with it — the diseases, the poor education, drug abuse, broken families, and poverty that seem to have no end. That was my world growing up.
-        </p>
-        <p>
-          After finishing high school, I had no money to join university. Not immediately. I had to sit for a few years and find work first. I got a <strong>housekeeping job</strong> — not glamorous, but it was a start. I saved. I sacrificed. And eventually, I began paying my own university tuition.
-        </p>
-        <p>
-          Today, I am studying for a <strong>Bachelor of Science in Computer Science</strong>, and I am proud of every step it took to get here. During a module on Internet Technology and Web Design, our lecturer asked us to identify a problem in society and build a website around it. For me, there was no question. I had lived the problem.
-        </p>
-        <p>
-          That assignment became this organization. Because sometimes a new dawn finds you first — and then calls you to be the light for others. I named it <strong>Dawnora</strong> — the aura of a new dawn — because that is what has carried me this far. Not luck, not talent alone, but the promise that after every darkness, the sun rises.
-        </p>
-        <p>
-          And if a new dawn could reach me in that village by the Nile, I believe it can reach every story out there that feels hard but isn't impossible.
-        </p>
-      </div>
-      <div class="story-pull reveal">
-        <blockquote>
-          "After every darkness, the sun rises — and that sunrise is Dawnora."
-        </blockquote>
-        <div class="story-attribution">
-          <div class="story-avatar">F</div>
-          <div class="story-attribution-text">
-            <div class="story-attribution-name">
-              KISIGE ELVIS<br>
-              Founder, Dawnora Kyabirwa
-            </div>
-            <div class="story-attribution-role">CS Student · Community Advocate · Eastern Uganda</div>
+  <!-- Hero with rotating slideshow -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content reveal">
+        <div class="hero-eyebrow"><i class="fas fa-fish"></i> Nonprofit · Eastern Uganda · Kyabirwa Village, along the River Nile</div>
+        <h1>Dawnora Kyabirwa</h1>
+        <p>Restoring Hope. Transforming Lives. Flowing like a gentle current along the Nile.</p>
+        <div>
+          <a href="#support" class="btn btn-primary"><i class="fas fa-hand-holding-heart"></i> Support Us</a>
+          <a href="#programs" class="btn btn-outline" style="margin-left: 12px;"><i class="fas fa-seedling"></i> Our Programs</a>
+        </div>
+        <div class="hero-slideshow">
+          <div class="slideshow-container" id="heroSlideshow">
+            <img class="slide-img active" src="dawnora_Img/1.jpeg" alt="Dawnora 1" onerror="this.src='https://placehold.co/600x300/064e3b/7ae9ff?text=Hope'">
+            <img class="slide-img" src="dawnora_Img/3.jpeg" alt="Dawnora 2" onerror="this.src='https://placehold.co/600x300/064e3b/7ae9ff?text=Care'">
+            <img class="slide-img" src="dawnora_Img/Blair with kids.jpeg" alt="Blair with kids" onerror="this.src='https://placehold.co/600x300/064e3b/7ae9ff?text=Community'">
+            <img class="slide-img" src="dawnora_Img/Happy kid.jpeg" alt="Happy kid" onerror="this.src='https://placehold.co/600x300/064e3b/7ae9ff?text=Happiness'">
+            <img class="slide-img" src="dawnora_Img/kid eating.jpeg" alt="Kid eating" onerror="this.src='https://placehold.co/600x300/064e3b/7ae9ff?text=Nourishment'">
+            <img class="slide-img" src="dawnora_Img/6.jpeg" alt="Dawnora 6" onerror="this.src='https://placehold.co/600x300/064e3b/7ae9ff?text=Family'">
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CO-FOUNDER SECTION (Wakisima Ivan Blair) -->
-<section class="cofounder-section">
-  <div class="container">
-    <p class="section-eyebrow reveal">Our Co-founder</p>
-    <h2 class="section-title reveal">Wakisima Ivan Blair</h2>
-    <div class="divider-bar reveal"></div>
-    <div class="story-layout">
-      <div class="story-text reveal">
-        <p>
-          My name is <strong>Wakisima Ivan Blair</strong>, and I was raised by a single mother in a life of constant struggle. Where I grew up, we did not grow — we survived. School fees were uncertain, food was never enough, and each day was a fight.
-        </p>
-        <p>
-          Yet my mother taught me something powerful: even when we had nothing, we could still share something.
-        </p>
-        <p>
-          There were times I felt invisible, times I lost hope and wished someone would come and help us. No one came. And that is when I made a decision to become that hope for others.
-        </p>
-        <p>
-          Dawnora Kyabirwa was born from that journey. It exists to remind the hopeless that their story is not the end, and that even in the hardest life, a new dawn can still rise.
-        </p>
+  <!-- About / Mission -->
+  <section id="mission">
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">Who we are</div><h2 class="section-title">About Dawnora Kyabirwa</h2><div class="divider"></div></div>
+      <p class="reveal">Dawnora Kyabirwa (D.K) is a grassroots nonprofit founded in Kyabirwa Village, Jinja, Uganda — located along the banks of the River Nile. We uplift orphans, disabled individuals, and vulnerable communities through healthcare, education, and rehabilitation.</p>
+      <div class="stat-row reveal">
+        <div class="stat"><div class="stat-number">50+</div><div>Orphans Supported</div></div>
+        <div class="stat"><div class="stat-number">100+</div><div>Medical Cases</div></div>
+        <div class="stat"><div class="stat-number">8</div><div>Active Programs</div></div>
+        <div class="stat"><div class="stat-number">5</div><div>Communities along the Nile</div></div>
       </div>
-      <div class="story-pull reveal">
-        <blockquote>
-          "Even when we had nothing, we could still share the light of a new dawn."
-        </blockquote>
-        <div class="story-attribution">
-          <div class="story-avatar">IW</div>
-          <div class="story-attribution-text">
-            <div class="story-attribution-name">
-              WAKISIMA IVAN BLAIR<br>
-              Co-founder, Dawnora Kyabirwa
-            </div>
-            <div class="story-attribution-role">Community Builder · Advocate for the Hopeless</div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section>
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">What drives us</div><h2 class="section-title">Our Core Values</h2><div class="divider"></div></div>
+      <div class="grid-3">
+        <div class="value-card"><i class="fas fa-sun"></i><h3>New Dawn</h3><p>Every person deserves a fresh start and a radiant future.</p></div>
+        <div class="value-card"><i class="fas fa-hands-helping"></i><h3>Dignity</h3><p>Deep respect for every individual, without exception.</p></div>
+        <div class="value-card"><i class="fas fa-chalkboard-user"></i><h3>Empowerment</h3><p>Building sustainable community capacity.</p></div>
+        <div class="value-card"><i class="fas fa-heart"></i><h3>Compassion</h3><p>Empathy for the forgotten and the hurting.</p></div>
+        <div class="value-card"><i class="fas fa-balance-scale"></i><h3>Integrity</h3><p>Transparent, accountable, and honest.</p></div>
+        <div class="value-card"><i class="fas fa-globe-africa"></i><h3>Community</h3><p>Working with – not just for – communities.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Founder & Co-founder Stories -->
+  <section>
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">The story behind it all</div><h2 class="section-title">Why We Started</h2><div class="divider"></div></div>
+      <div class="grid-2">
+        <div class="speech-card reveal">
+          <div class="profile-row">
+            <img class="profile-img" src="dawnora_Img/elvis.jpeg" alt="Elvis" onerror="this.src='https://ui-avatars.com/api/?background=0e5c4a&color=fff&name=Elvis'">
+            <div class="profile-name">Kisige Elvis<br><span style="font-size: 0.8rem; color: #7ae9ff;">Founder & Executive Director</span></div>
+          </div>
+          <div class="speech-bubble">
+            <p>“I grew up in a deep village along the River Nile. If you know that part of Uganda, you already know the weight that comes with it — diseases, poor education, drug abuse, broken families, and poverty that seem to have no end. That was my world.</p>
+            <p>After high school, I had no money for university. I worked as a housekeeper, saved, sacrificed, and eventually paid my own tuition. Today I study Computer Science. When our lecturer asked us to identify a problem in society and build a website around it, I had no question – I had lived the problem.</p>
+            <p>That assignment became this organization. Because sometimes a new dawn finds you first – and then calls you to be the light for others. I named it Dawnora – the aura of a new dawn – because after every darkness, the sun rises.”</p>
+          </div>
+        </div>
+        <div class="speech-card reveal">
+          <div class="profile-row">
+            <img class="profile-img" src="dawnora_Img/Blair.jpeg" alt="Ivan" onerror="this.src='https://ui-avatars.com/api/?background=0e5c4a&color=fff&name=Ivan'">
+            <div class="profile-name">Wakisima Ivan Blair<br><span style="font-size: 0.8rem; color: #7ae9ff;">Co-founder & Community Director</span></div>
+          </div>
+          <div class="speech-bubble">
+            <p>“I was raised by a single mother in a life of constant struggle. Where I grew up, we did not grow – we survived. School fees were uncertain, food was never enough, and each day was a fight.</p>
+            <p>Yet my mother taught me something powerful: even when we had nothing, we could still share something. There were times I felt invisible, times I lost hope and wished someone would come and help us. No one came. And that is when I made a decision to become that hope for others.</p>
+            <p>Dawnora Kyabirwa was born from that journey. It exists to remind the hopeless that their story is not the end, and that even in the hardest life, a new dawn can still rise.”</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- HIERARCHY -->
-<section class="hierarchy-section" id="structure">
-  <div class="container">
-    <p class="section-eyebrow reveal">Leadership</p>
-    <h2 class="section-title reveal">Organizational Structure</h2>
-    <div class="divider-bar reveal"></div>
-    <p class="section-lead reveal">A lean but purposeful structure built to grow with the communities we serve.</p>
-    <div class="hier-tree reveal">
-      <div class="hier-tier">
-        <div class="hier-tier-label">Founding Leadership</div>
-        <div class="hier-nodes">
-          <div class="hier-node hn-founder">Founder &amp; Executive Director</div>
-          <div class="hier-node hn-founder">Co-founder &amp; Community Director</div>
-        </div>
+  <!-- Organizational Hierarchy -->
+  <section>
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">Leadership</div><h2 class="section-title">Organizational Structure</h2><div class="divider"></div></div>
+      <div class="hier-tree">
+        <div class="hier-tier"><div class="hier-tier-label">Founding Leadership</div><div class="hier-nodes"><div class="hier-node">Founder & Executive Director</div><div class="hier-node">Co-founder & Community Director</div></div></div>
+        <div class="hier-tier"><div class="hier-tier-label">Governance</div><div class="hier-nodes"><div class="hier-node">Board of Directors</div><div class="hier-node">Advisory Council</div></div></div>
+        <div class="hier-tier"><div class="hier-tier-label">Operations & Programs</div><div class="hier-nodes"><div class="hier-node">Programs Manager</div><div class="hier-node">Finance & Administration</div><div class="hier-node">Community Outreach</div><div class="hier-node">Medical & Rehabilitation</div></div></div>
+        <div class="hier-tier"><div class="hier-tier-label">Ground Level</div><div class="hier-nodes"><div class="hier-node">Field Volunteers</div><div class="hier-node">Community Health Workers</div><div class="hier-node">Beneficiaries & Families</div></div></div>
       </div>
-      <div class="hier-connector"></div>
-      <div class="hier-tier">
-        <div class="hier-tier-label">Governance</div>
-        <div class="hier-nodes">
-          <div class="hier-node hn-board">Board of Directors</div>
-          <div class="hier-node hn-board">Advisory Council</div>
-        </div>
+    </div>
+  </section>
+
+  <!-- Impact Goals -->
+  <section>
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">Our reach</div><h2 class="section-title">Impact Goals for 2026</h2><div class="divider"></div></div>
+      <div class="stat-row reveal">
+        <div class="stat"><div class="stat-number">50+</div><div>Orphans & vulnerable children supported</div></div>
+        <div class="stat"><div class="stat-number">20+</div><div>Disabled individuals assisted</div></div>
+        <div class="stat"><div class="stat-number">5</div><div>Communities reached along the Nile</div></div>
+        <div class="stat"><div class="stat-number">100+</div><div>People receiving medical or rehab support</div></div>
       </div>
-      <div class="hier-connector"></div>
-      <div class="hier-tier">
-        <div class="hier-tier-label">Operations &amp; Programs</div>
-        <div class="hier-nodes">
-          <div class="hier-node hn-ops">Programs Manager</div>
-          <div class="hier-node hn-ops">Finance &amp; Administration</div>
-          <div class="hier-node hn-ops">Community Outreach</div>
-          <div class="hier-node hn-ops">Medical &amp; Rehabilitation</div>
+    </div>
+  </section>
+
+  <!-- Programs with images -->
+  <section id="programs">
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">What we do</div><h2 class="section-title">Our Programs</h2><div class="divider"></div></div>
+      <div class="grid-2">
+        <div class="program-card reveal">
+          <img class="program-img" src="dawnora_Img/1.jpeg" alt="Orphan support" onerror="this.src='https://placehold.co/400x200/064e3b/7ae9ff?text=Orphans'">
+          <div class="program-card-body"><i class="fas fa-graduation-cap"></i><h3>Education & Orphan Support</h3><p>School fees, uniforms, mentorship for vulnerable children.</p></div>
         </div>
-      </div>
-      <div class="hier-connector"></div>
-      <div class="hier-tier">
-        <div class="hier-tier-label">Ground Level</div>
-        <div class="hier-nodes">
-          <div class="hier-node hn-field">Field Volunteers</div>
-          <div class="hier-node hn-field">Community Health Workers</div>
-          <div class="hier-node hn-field">Beneficiaries &amp; Families</div>
+        <div class="program-card reveal">
+          <img class="program-img" src="dawnora_Img/3.jpeg" alt="Medical" onerror="this.src='https://placehold.co/400x200/064e3b/7ae9ff?text=Medical'">
+          <div class="program-card-body"><i class="fas fa-stethoscope"></i><h3>Medical Outreach</h3><p>Hospital visits, treatment sponsorship, health assistance.</p></div>
+        </div>
+        <div class="program-card reveal">
+          <img class="program-img" src="images/rehab.jpg" alt="Rehab" onerror="this.src='https://placehold.co/400x200/064e3b/7ae9ff?text=Rehab'">
+          <div class="program-card-body"><i class="fas fa-hand-holding-heart"></i><h3>Rehabilitation</h3><p>Recovery from addiction, trauma, and mental health challenges.</p></div>
+        </div>
+        <div class="program-card reveal">
+          <img class="program-img" src="images/prisoner.jpg" alt="Prison" onerror="this.src='https://placehold.co/400x200/064e3b/7ae9ff?text=Prison'">
+          <div class="program-card-body"><i class="fas fa-gavel"></i><h3>Prison Ministry</h3><p>Emotional support, guidance, and reintegration preparation.</p></div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- IMPACT -->
-<section class="impact-section" id="impact">
-  <div class="container">
-    <p class="section-eyebrow reveal">Our reach</p>
-    <h2 class="section-title reveal">Impact Goals for 2026</h2>
-    <div class="divider-bar reveal"></div>
-    <p class="section-lead reveal">We are in our founding phase. These are the goals we are passionately working toward in our first year of formal operations.</p>
-    <div class="impact-grid">
-      <div class="impact-card reveal">
-        <div class="impact-num">50+</div>
-        <div class="impact-label">Orphans &amp; vulnerable children supported</div>
-      </div>
-      <div class="impact-card reveal">
-        <div class="impact-num">20+</div>
-        <div class="impact-label">Disabled individuals assisted</div>
-      </div>
-      <div class="impact-card reveal">
-        <div class="impact-num">5</div>
-        <div class="impact-label">Communities reached along the Nile</div>
-      </div>
-      <div class="impact-card reveal">
-        <div class="impact-num">100+</div>
-        <div class="impact-label">People receiving medical or rehab support</div>
+  <!-- Gallery with dawnora_Img -->
+  <section id="gallery">
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">Moments of hope</div><h2 class="section-title">Gallery</h2><div class="divider"></div></div>
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="dawnora_Img/Blair with kids.jpeg" alt="Blair with kids" onerror="this.src='https://placehold.co/400x400/064e3b/7ae9ff?text=Hope'"></div>
+        <div class="gallery-item"><img src="dawnora_Img/Happy kid.jpeg" alt="Happy kid" onerror="this.src='https://placehold.co/400x400/064e3b/7ae9ff?text=Care'"></div>
+        <div class="gallery-item"><img src="dawnora_Img/kid eating.jpeg" alt="Kid eating" onerror="this.src='https://placehold.co/400x400/064e3b/7ae9ff?text=Community'"></div>
+        <div class="gallery-item"><img src="dawnora_Img/6.jpeg" alt="Dawnora 6" onerror="this.src='https://placehold.co/400x400/064e3b/7ae9ff?text=Rehab'"></div>
       </div>
     </div>
+  </section>
+
+  <!-- ========== FIVE WAYS TO GIVE BACK ========== -->
+  <section id="support">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-eyebrow">How to Help</div>
+        <h2 class="section-title">Five Ways to <span style="color:#7ae9ff;">Give Back</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="ways-grid">
+        <!-- Mobile Money -->
+        <div class="way-card reveal">
+          <div class="way-icon gold"><i class="fa-solid fa-mobile-screen"></i></div>
+          <div class="step-badge">Option 01</div>
+          <h3>Mobile Money</h3>
+          <p>Fast and easy — send directly to our numbers below.</p>
+          <div class="momo-row"><span class="momo-label">MTN Uganda</span><span class="momo-number">0782 168 324</span></div>
+          <div class="momo-row"><span class="momo-label">Airtel Uganda</span><span class="momo-number">0757 321 801</span></div>
+          <div class="momo-name"><i class="fa-solid fa-user"></i> Account Name: <strong>KISIGE ELVIS</strong></div>
+          <p class="momo-note">* Account is personal as this is a growing initiative.</p>
+        </div>
+        <!-- Bank -->
+        <div class="way-card reveal">
+          <div class="way-icon red"><i class="fa-solid fa-building-columns"></i></div>
+          <div class="step-badge">Option 02</div>
+          <h3>Bank Transfer</h3>
+          <p>We are working on setting up a dedicated organizational bank account. Check back soon.</p>
+          <div class="unavailable-badge"><i class="fa-solid fa-circle-xmark"></i> Currently unavailable</div>
+        </div>
+        <!-- In-Kind -->
+        <div class="way-card reveal">
+          <div class="way-icon teal"><i class="fa-solid fa-box-open"></i></div>
+          <div class="step-badge">Option 03</div>
+          <h3>In-Kind Donations</h3>
+          <p>We welcome physical items that directly help the communities we serve:</p>
+          <ul class="inkind-list"><li>Food items</li><li>Clothing</li><li>Shoes</li><li>Medical supplies</li><li>School materials</li><li>Toiletries</li></ul>
+        </div>
+        <!-- Volunteer -->
+        <div class="way-card reveal">
+          <div class="way-icon green"><i class="fa-solid fa-hands-clapping"></i></div>
+          <div class="step-badge">Option 04</div>
+          <h3>Volunteer With Us</h3>
+          <p>Join our team in community outreach, hospital visits, prison ministry, and rehabilitation support. Your time is a gift too.</p>
+          <a href="#contact-section" style="display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; font-weight:500; color:#7ae9ff; text-decoration:none;">Get in touch <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <!-- Spread the word -->
+        <div class="way-card reveal">
+          <div class="way-icon purple"><i class="fa-solid fa-share-nodes"></i></div>
+          <div class="step-badge">Option 05</div>
+          <h3>Spread the Word</h3>
+          <p>Share our mission on social media, with family, friends, and your network. Awareness is the first step toward impact.</p>
+          <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+            <a href="https://wa.me/?text=Check%20out%20Dawnora%20Kyabirwa%20https://dawnora.org" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#25d366; color:#fff; font-size:12px; font-weight:500; padding:8px 14px; border-radius:8px; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://dawnora.org" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#1877f2; color:#fff; font-size:12px; font-weight:500; padding:8px 14px; border-radius:8px; text-decoration:none;"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT SECTION (two‑column grid, exactly as requested) ========== -->
+  <section id="contact-section">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-eyebrow">Reach Out</div>
+        <h2 class="section-title">Get in <span style="color:#7ae9ff;">Touch</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="contact-grid">
+        <!-- Left card: contact info + office hours -->
+        <div class="contact-card reveal">
+          <h2>Get in Touch</h2>
+          <div class="contact-info">
+            <p><strong>Email:</strong><br><a href="mailto:elviskisige96@gmail.com">elviskisige96@gmail.com</a></p>
+            <p><strong>Phone:</strong><br><a href="tel:+256757321801">+256 757-321-801</a></p>
+            <p><strong>Location:</strong><br>Kyabirwa Village, Jinja, Uganda — along the River Nile</p>
+            <p><strong>WhatsApp:</strong><br><a href="https://wa.me/256757321801" target="_blank">Chat with us on WhatsApp</a></p>
+          </div>
+          <hr>
+          <h3>Office Hours</h3>
+          <p>Monday - Friday: 8:00 AM - 5:00 PM</p>
+          <p>Saturday: 9:00 AM - 1:00 PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+
+        <!-- Right card: message form -->
+        <div class="contact-card reveal">
+          <h2>Send a Message</h2>
+          <form action="https://formsubmit.co/elviskisige96@gmail.com" method="POST">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="thanks.html">
+            <input type="text" name="name" placeholder="Your Full Name" required>
+            <input type="email" name="email" placeholder="Your Email Address" required>
+            <input type="text" name="phone" placeholder="Your Phone Number (optional)">
+            <textarea name="message" placeholder="Write your message here..." required></textarea>
+            <button type="submit">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="text-align: center; background: linear-gradient(135deg, #023b47, #011f28);">
+    <div class="container">
+      <div class="reveal"><div class="section-eyebrow">Be part of the story</div><h2 class="section-title">Someone's new dawn could be your giving</h2><a href="#support" class="btn btn-primary" style="background: #7ae9ff; color: #022b36;">Support This Initiative</a></div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <p><i class="fas fa-envelope"></i> elviskisige96@gmail.com | <i class="fas fa-phone-alt"></i> +256 757 321 801</p>
+    <p><i class="fas fa-map-marker-alt"></i> Kyabirwa Village, Jinja, Uganda — along the River Nile</p>
+    <div class="footer-contact-details">
+      <div><strong><i class="fas fa-user"></i> Kisige Elvis (Founder)</strong><br>📞 <a href="tel:+256757321801" style="color:#8ad2e0;">+256 757 321 801</a><br>✉️ <a href="mailto:elviskisige96@gmail.com" style="color:#8ad2e0;">elviskisige96@gmail.com</a><br>💬 <a href="https://wa.me/256757321801" target="_blank" style="color:#8ad2e0;">WhatsApp</a></div>
+      <div><strong><i class="fas fa-users"></i> Wakisima Ivan Blair (Co‑founder)</strong><br>📞 <a href="tel:+256757321801" style="color:#8ad2e0;">+256 757 321 801</a><br>✉️ <a href="mailto:elviskisige96@gmail.com" style="color:#8ad2e0;">(same email – team)</a><br>💬 <a href="https://wa.me/256757321801" target="_blank" style="color:#8ad2e0;">WhatsApp</a></div>
+    </div>
+    <p style="margin-top: 1rem;">© 2026 Dawnora Kyabirwa — Restoring Hope, Flowing Like Water.</p>
+  </footer>
+
+  <a href="https://wa.me/256757321801" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  <div class="chat-icon" onclick="toggleChat()"><i class="far fa-comment-dots"></i><span class="notif">1</span></div>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header">Dawnora Support <span onclick="toggleChat()">✖</span></div>
+    <div class="chat-body" id="chatBody"><p class="bot">🌊 Hello! We are located along the River Nile, bringing hope to the community.</p><p class="bot">How can we help?</p></div>
+    <div class="chat-footer"><input id="userInput" placeholder="Type a message..."><button onclick="sendMessage()">Send</button></div>
   </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section">
-  <div class="container">
-    <p class="section-eyebrow reveal">Be part of the story</p>
-    <h2 class="reveal">Someone's new dawn could be your giving</h2>
-    <p class="reveal">You don't have to have much. Neither did we. A small act of support can be the turning point in someone's entire story.</p>
-    <a href="support.html" class="btn btn-solid reveal" style="font-size:1rem; padding: 14px 36px;">Support This Initiative</a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-brand">Dawnora Kyabirwa</div>
-  <div class="footer-links">
-    <a href="index.html">Home</a>
-    <a href="programs.html">Programs</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="contact.html">Contact</a>
-    <a href="support.html">Support Us</a>
-  </div>
-  <p>Restoring Hope · Transforming Lives · Radiating a New Dawn</p>
-  <p style="margin-top:6px;">&copy; 2026 Dawnora Kyabirwa · Jinja, Eastern Uganda</p>
-</footer>
-
-<!-- WHATSAPP -->
-<a href="https://wa.me/256757321801" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
-  <img src="images/whatsap.png" alt="WhatsApp">
-</a>
-
-<!-- CHAT BUTTON -->
-<div class="chat-icon" onclick="toggleChat()">
-  💬
-  <span class="notif" id="notifBadge">1</span>
 </div>
 
-<!-- CHAT BOX -->
-<div class="chat-box" id="chatBox">
-  <div class="chat-header">
-    Dawnora Support
-    <span onclick="toggleChat()" style="cursor:pointer; font-size:1rem;">✖</span>
-  </div>
-  <div class="chat-body" id="chatBody">
-    <p class="bot">👋 Hello! Welcome to Dawnora Kyabirwa — a new dawn of hope.</p>
-    <p class="bot">How can we help you today?</p>
-    <p><h6>If not helped enough, please reach us on WhatsApp or via our Contact page. Thank you.</h6></p>
-  </div>
-  <div class="chat-footer">
-    <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMessage()">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+<div class="moving-sun" id="movingSun">
+  <svg viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="28" fill="#7ae9ff" stroke="#3bc9db" stroke-width="2"/>
+    <circle cx="50" cy="50" r="12" fill="#ffffff" opacity="0.8"/>
+    <path d="M50 20 L50 30 M50 70 L50 80 M20 50 L30 50 M70 50 L80 50" stroke="#7ae9ff" stroke-width="3" stroke-linecap="round"/>
+  </svg>
 </div>
 
 <script>
-  // Loader
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('loader').classList.add('hidden');
-    }, 900);
-  });
-
-  // Hamburger
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open');
-  });
-  mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-    });
-  });
-
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 60);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  reveals.forEach(el => observer.observe(el));
-
-  // Chat
-  function toggleChat() {
-    const box = document.getElementById('chatBox');
-    box.classList.toggle('open');
-    document.getElementById('notifBadge').style.display = 'none';
+  // Rotating image slideshow
+  const slides = document.querySelectorAll('.slide-img');
+  let currentIndex = 0;
+  if (slides.length) {
+    setInterval(() => {
+      slides[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex].classList.add('active');
+    }, 3000);
   }
 
-  const responses = {
-    default: "Thank you for reaching out! For more details, please visit our Contact page or WhatsApp us directly.",
-    donate: "You can support us via our Support page. Every contribution brings a new dawn to someone's life. 💚",
-    help: "We provide support for orphans, disabled individuals, and communities in need. Visit our Programs page to learn more.",
-    volunteer: "We welcome volunteers! Please reach out via our Contact page and we'll get back to you.",
-    contact: "You can reach us on WhatsApp at +256757321801 or through our Contact page.",
-    programs: "We run programs in healthcare, education, and community rehabilitation. Check our Programs page for full details."
-  };
+  // Underwater canvas (glowing jellyfish, fish, light rays, particles)
+  const canvas = document.getElementById('oceanCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
 
+  function resizeCanvas() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const mouse = { x: W/2, y: H/2 };
+  window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  function drawLightRays() {
+    for (let i = 0; i < 6; i++) {
+      const x = i * (W / 5);
+      const grad = ctx.createLinearGradient(x, 0, x + 250, H);
+      grad.addColorStop(0, 'rgba(180,240,255,0.10)');
+      grad.addColorStop(1, 'rgba(180,240,255,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + 220, H);
+      ctx.lineTo(x + 350, H);
+      ctx.lineTo(x + 120, 0);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  const particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 4,
+      speed: 0.2 + Math.random() * 1.2,
+      alpha: 0.05 + Math.random() * 0.15
+    });
+  }
+  function drawParticles() {
+    particles.forEach(p => {
+      p.y -= p.speed;
+      if (p.y < 0) { p.y = H; p.x = Math.random() * W; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180,220,255,${p.alpha})`;
+      ctx.fill();
+    });
+  }
+
+  const plants = [];
+  for (let i = 0; i < 40; i++) {
+    plants.push({ x: Math.random() * W, h: 100 + Math.random() * 200, phase: Math.random() * Math.PI * 2 });
+  }
+  function drawPlants(t) {
+    plants.forEach(p => {
+      ctx.beginPath();
+      ctx.moveTo(p.x, H + 50);
+      for (let y = 0; y < p.h; y += 8) {
+        const sway = Math.sin(t * 0.001 + y * 0.03 + p.phase) * 12;
+        ctx.lineTo(p.x + sway, H - y);
+      }
+      ctx.strokeStyle = 'rgba(40,160,120,0.5)';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    });
+  }
+
+  class Jelly {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.size = 20 + Math.random() * 35;
+      this.speed = 0.3 + Math.random() * 0.8;
+      this.phase = Math.random() * 100;
+      this.glowPhase = Math.random() * Math.PI * 2;
+      this.glowIntensity = 0.5;
+    }
+    update() {
+      this.y -= this.speed;
+      this.x += Math.sin(this.phase) * 0.4;
+      this.phase += 0.02;
+      if (this.y < -100) { this.y = H + 100; this.x = Math.random() * W; }
+      this.glowIntensity = 0.4 + Math.sin(Date.now() * 0.003 + this.glowPhase) * 0.4;
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      const glowStrength = this.glowIntensity * 0.8;
+      ctx.shadowBlur = 20 * glowStrength;
+      ctx.shadowColor = `rgba(200, 160, 255, ${0.6 + glowStrength * 0.4})`;
+      const grad = ctx.createRadialGradient(0,0,2,0,0,this.size);
+      grad.addColorStop(0, `rgba(255,220,255,${0.7 + this.glowIntensity * 0.3})`);
+      grad.addColorStop(1, `rgba(160,120,255,${0.1 + this.glowIntensity * 0.15})`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0,0,this.size,Math.PI,0);
+      ctx.fill();
+      for(let i=-4;i<=4;i++) {
+        ctx.beginPath();
+        ctx.moveTo(i*4,0);
+        for(let y=0;y<70;y+=8){
+          const sway=Math.sin(this.phase+y*0.08+i)*6;
+          ctx.lineTo(i*4+sway,y);
+        }
+        ctx.strokeStyle = `rgba(220,180,255,${0.3 + this.glowIntensity * 0.4})`;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+      }
+      if (this.glowIntensity > 0.7) {
+        for (let s = 0; s < 5; s++) {
+          const angle = Math.random() * Math.PI * 2;
+          const rad = this.size * (0.8 + Math.random() * 0.6);
+          const px = Math.cos(angle) * rad;
+          const py = Math.sin(angle) * rad;
+          ctx.beginPath();
+          ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,200,255,${Math.random() * 0.6})`;
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+  }
+  const jellyfish = [];
+  for(let i=0;i<10;i++) jellyfish.push(new Jelly());
+
+  class Fish {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.vx = Math.random() * 2 - 1;
+      this.vy = Math.random() * 2 - 1;
+      this.speed = 1 + Math.random() * 2;
+      this.size = 0.5 + Math.random() * 0.9;
+      this.tail = Math.random() * 100;
+      this.colors = [ ['#ffffff','#ff922b'], ['#ffffff','#d6336c'], ['#ffffff','#845ef7'] ][Math.floor(Math.random()*3)];
+    }
+    update() {
+      this.tail += 0.1;
+      const dx = mouse.x - this.x;
+      const dy = mouse.y - this.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 220) { this.vx += dx * 0.0007; this.vy += dy * 0.0007; }
+      this.vx += (Math.random()-0.5)*0.03;
+      this.vy += (Math.random()-0.5)*0.03;
+      const mag = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+      if(mag > this.speed) { this.vx = (this.vx/mag)*this.speed; this.vy = (this.vy/mag)*this.speed; }
+      this.x += this.vx;
+      this.y += this.vy;
+      const margin = 100;
+      if(this.x < margin) this.vx += 0.05;
+      if(this.x > W-margin) this.vx -= 0.05;
+      if(this.y < margin) this.vy += 0.05;
+      if(this.y > H-margin) this.vy -= 0.05;
+      this.angle = Math.atan2(this.vy, this.vx);
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x,this.y);
+      ctx.rotate(this.angle);
+      ctx.scale(this.size,this.size);
+      const swing = Math.sin(this.tail*1.8)*10;
+      ctx.beginPath();
+      ctx.moveTo(-50,0);
+      ctx.lineTo(-85+swing,-22);
+      ctx.lineTo(-85+swing,22);
+      ctx.closePath();
+      const tg = ctx.createLinearGradient(-85,0,-50,0);
+      tg.addColorStop(0,this.colors[1]);
+      tg.addColorStop(1,this.colors[0]);
+      ctx.fillStyle = tg;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(60,0);
+      ctx.bezierCurveTo(20,-32,-20,-35,-50,0);
+      ctx.bezierCurveTo(-20,35,20,32,60,0);
+      const bg = ctx.createLinearGradient(-50,0,60,0);
+      bg.addColorStop(0,this.colors[0]);
+      bg.addColorStop(0.5,this.colors[1]);
+      bg.addColorStop(1,this.colors[0]);
+      ctx.fillStyle = bg;
+      ctx.fill();
+      for(let i=0;i<4;i++) {
+        ctx.beginPath();
+        ctx.ellipse(-20+i*15,(Math.random()-0.5)*10,8,5,0,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,0,0,0.12)';
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(35,-6,4,0,Math.PI*2);
+      ctx.fillStyle='#111';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0,-10);
+      ctx.quadraticCurveTo(10,-40,20,-10);
+      ctx.fillStyle='rgba(255,255,255,0.3)';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0,10);
+      ctx.quadraticCurveTo(10,40,20,10);
+      ctx.fillStyle='rgba(255,255,255,0.2)';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  const fishes = [];
+  for(let i=0;i<12;i++) fishes.push(new Fish());
+
+  window.addEventListener('click', e => {
+    fishes.forEach(f => {
+      const dx = f.x - e.clientX;
+      const dy = f.y - e.clientY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 250) { f.vx += dx * 0.12; f.vy += dy * 0.12; }
+    });
+  });
+
+  function animateCanvas(time) {
+    requestAnimationFrame(animateCanvas);
+    ctx.clearRect(0,0,W,H);
+    drawLightRays();
+    drawParticles();
+    drawPlants(time);
+    jellyfish.forEach(j => { j.update(); j.draw(); });
+    fishes.forEach(f => { f.update(); f.draw(); });
+  }
+  animateCanvas(0);
+</script>
+
+<script>
+  // Moving pearl (light) follows scroll
+  const pearl = document.getElementById('movingSun');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    const progress = Math.min(1, scrollY / maxScroll);
+    const leftPos = 20 + (progress * 55);
+    const bottomPos = 20 + (progress * 40);
+    const rotation = progress * 200;
+    if (pearl) pearl.style.transform = `translate(${leftPos}px, -${bottomPos}px) rotate(${rotation}deg)`;
+  });
+
+  const mobBtn = document.getElementById('mobileBtn');
+  const mobNav = document.getElementById('mobileNav');
+  mobBtn?.addEventListener('click', () => mobNav.classList.toggle('open'));
+  document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => mobNav.classList.remove('open')));
+
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  function toggleChat() { document.getElementById('chatBox').classList.toggle('open'); }
   function sendMessage() {
-    const input = document.getElementById('userInput');
+    const inp = document.getElementById('userInput');
     const body = document.getElementById('chatBody');
-    const text = input.value.trim();
-    if (!text) return;
-
-    const userEl = document.createElement('p');
-    userEl.className = 'user-msg';
-    userEl.textContent = text;
-    body.appendChild(userEl);
-    input.value = '';
-
-    const lower = text.toLowerCase();
-    let reply = responses.default;
-    if (lower.includes('donat') || lower.includes('support') || lower.includes('give')) reply = responses.donate;
-    else if (lower.includes('volunteer')) reply = responses.volunteer;
-    else if (lower.includes('contact') || lower.includes('reach') || lower.includes('phone')) reply = responses.contact;
-    else if (lower.includes('program') || lower.includes('service')) reply = responses.programs;
-    else if (lower.includes('help') || lower.includes('assist')) reply = responses.help;
-
+    if(!inp.value.trim()) return;
+    const userMsg = document.createElement('p'); userMsg.className = 'user-msg'; userMsg.textContent = inp.value;
+    body.appendChild(userMsg);
+    inp.value = '';
     setTimeout(() => {
-      const botEl = document.createElement('p');
-      botEl.className = 'bot';
-      botEl.textContent = reply;
-      body.appendChild(botEl);
+      const botMsg = document.createElement('p'); botMsg.className = 'bot'; botMsg.textContent = "✨ Thank you! Please reach us on WhatsApp or our Contact page for more help.";
+      body.appendChild(botMsg);
       body.scrollTop = body.scrollHeight;
     }, 500);
-
     body.scrollTop = body.scrollHeight;
   }
+  window.sendMessage = sendMessage;
+  window.toggleChat = toggleChat;
 </script>
 </body>
 </html>
